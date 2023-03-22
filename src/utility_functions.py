@@ -4,6 +4,10 @@ import torch
 import os
 import sys
 from PIL import Image
+def make_slides_list(slide_path ,slide_list):
+  slide_list.sort()
+  slide_list = [slide_path + "A" +str(x) +".ndpi" for x in slide_list]
+  return slide_list
 # get the  absolute path of slides
 def get_slides_list(slide_path):
   slide_list = os.listdir(slide_path)

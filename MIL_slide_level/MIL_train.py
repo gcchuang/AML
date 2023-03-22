@@ -164,10 +164,13 @@ class MILdataset(data.Dataset):
     def __init__(self, libraryfile='', transform=None):
         lib = torch.load(libraryfile)
         slides = []
+        cache = openslide.OpenSlideCache(256<<20)
         for i,name in enumerate(lib['slides']):
             sys.stdout.write('Opening SVS headers: [{}/{}]\r'.format(i+1, len(lib['slides'])))
             sys.stdout.flush()
-            slides.append(openslide.OpenSlide(name))
+            oneslide = openslide.OpenSlide(name)
+            oneslide.set_cache(cache)
+            slides.append(oneslide)
         print('')
         #Flatten grid
         grid = []
