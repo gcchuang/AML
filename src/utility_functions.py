@@ -1,9 +1,7 @@
 import pandas as pd
 import numpy as np
-import torch
 import os
-import sys
-from PIL import Image
+import random
 # get the absolute path of the slides in the slide_list
 def make_paths_list(slide_path ,slide_list):
   slide_list.sort()
@@ -22,28 +20,36 @@ def get_targets_list(gene,slide_list,info_file_path):
   targets_list = result[gene].astype(int).tolist()
   return targets_list
 # this is a function to get the coordinates of the patches in the WSIs, according to the tile_selection.tsv file
-def get_coordinates(tile_selection_path,patches_size,left_proportion,top_proportion):
+def get_coordinates(tile_selection_path,patches_size,left_proportion,shrink_proportion):
     df = pd.read_table(tile_selection_path)
-    # select the patches with Keep = 1 and in the lower right side of the WSI based on the proportion
-    df = df.loc[(df["Keep"] == 1) & (df["Column"]>=int(max(df["Column"])*left_proportion))& (df["Row"]>=int(max(df["Row"])*top_proportion))]
+    row_max = (max(df["Row"]))
+    col_max = (max(df["Column"]))
+    # select the patches with Keep = 1
+    df = df.loc[(df["Keep"] == 1)]
+    # select the patches in the right side of the slide
+    df = df.loc[(df["Column"]>=int(col_max*left_proportion))]
+    df = df.loc[(df["Column"]<=int(col_max*(1-(1-left_proportion)*shrink_proportion)))]
+    # shrink the sleceted area
+    df = df.loc[(df["Row"]>=int(row_max*shrink_proportion))& (df["Row"]<=int(row_max*(1-shrink_proportion)))]
     # group the rows by index to form a list of tuples
-    tuples = [(x, y) for x, y in zip(df['Row']*patches_size, df['Column']*patches_size)]
+    tuples = [(x, y) for x, y in zip(df['Column']*patches_size, df['Row']*patches_size)]
     patches_num = len(tuples)
     return tuples , patches_num
 def subtract_two_coordinates(list1,list2):
   list1 = list(set(list1) - set(list2))
   return list1
-def get_grid(slide_path,slide_list,patches_size,left_proportion,top_proportion):
+def get_grid(slide_path,slide_list,patches_size,left_proportion,shrink_proportion,patch_num):
   grid = []
   for slide in slide_list:
     path1 = '{}otsu_0.9/A{}/tile_selection.tsv'.format(slide_path,slide)
     path2 = '{}otsu_1.0/A{}/tile_selection.tsv'.format(slide_path,slide)
-    list1, num1 = get_coordinates(path1,patches_size,left_proportion,top_proportion)
-    list2, num2 = get_coordinates(path2,patches_size,left_proportion,top_proportion)
+    list1, num1 = get_coordinates(path1,patches_size,left_proportion,shrink_proportion)
+    list2, num2 = get_coordinates(path2,patches_size,left_proportion,shrink_proportion)
     result = subtract_two_coordinates(list1,list2)
-    grid.append(result)
-    if num1 - num2 == len(result):
-        print("slide {} done, patch_number are {}.".format(slide,len(result)))
+    if patch_num < len(result):
+        result = random.sample(result,patch_num)
+        print("slide {} done, slect {} patches from {} total patches.".format(slide,len(result),num1-num2))
     else:
-        print("slide {} done, patch_number are {}, but the difference is {}.".format(slide,len(result),num1-num2))
+        print("slide {} done, patch_number are {}.".format(slide,len(result)))
+    grid.append(result)
   return grid

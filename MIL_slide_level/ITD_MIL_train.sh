@@ -1,0 +1,2 @@
+# run python to train the MIL model with ITD dataset, output the log file to ITD_output.log
+python -u MIL_train.py --output /home/weber50432/AML_image_processing/MIL_slide_level/output/ITD_batch_128 --train_lib /home/weber50432/AML_image_processing/lib/ITD/ITD_train_data.pt --val_lib /home/weber50432/AML_image_processing/lib/ITD/ITD_val_data.pt --batch_size 128 --nepochs 100 --workers 1 > /home/weber50432/AML_image_processing/MIL_slide_level/output/ITD_batch_128/train_output.log 2>&1 &
