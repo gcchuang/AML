@@ -2,6 +2,7 @@ import pandas as pd
 import numpy as np
 import os
 import random
+import xlrd
 # get the absolute path of the slides in the slide_list
 def make_paths_list(slide_path ,slide_list):
   slide_list.sort()
@@ -52,4 +53,20 @@ def get_grid(slide_path,slide_list,patches_size,left_proportion,shrink_proportio
     else:
         print("slide {} done, patch_number are {}.".format(slide,len(result)))
     grid.append(result)
+  return grid
+def get_patches_grid(slide_path,slide_list,patch_num):
+  grid = []
+  for slide in slide_list:
+    slide_name = "A" + str(slide)
+    if slide_name in os.listdir(slide_path):
+      excel_path = slide_path + slide_name + "/porduction_result.xls"
+      if os.path.exists(excel_path):
+        wb = xlrd.open_workbook(excel_path)
+        sheet = wb.sheet_by_index(0)
+        patch_list = sheet.col_values(0)
+        patch_list.pop(0)
+        patch_list = random.sample(patch_list,patch_num)
+        grid.append(patch_list)
+      else:
+        print("slide {} do not have excel file.".format(slide_name))
   return grid

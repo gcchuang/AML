@@ -1,7 +1,8 @@
 HEnorm_python
 PyHIST/
 .vscode
-bone_marrow_preselect
+BoneMarrow/
+BMA_models/
 __pycache__
 *.DS_Store
 *.csv
