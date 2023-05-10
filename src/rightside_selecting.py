@@ -1,6 +1,5 @@
 import pandas as pd
 import os
-import re
 # this script is used to select the right side patches from the whole slide images, and save them in a new folder named rightside_patch
 directory_path = '/home/exon_storage1/aml_slide/patches/'
 for file in os.listdir(directory_path):

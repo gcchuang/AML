@@ -3,7 +3,6 @@ import os
 import numpy as np
 import argparse
 import random
-import openslide
 import PIL.Image as Image
 import torch
 import torch.nn as nn
@@ -163,13 +162,14 @@ def group_max(groups, data, nmax):
 class MILdataset(data.Dataset):
     def __init__(self, libraryfile='', transform=None):
         lib = torch.load(libraryfile)
-        print('')
+        print('loading', libraryfile)
         #Flatten grid
         grid = []
         slideIDX = []
         for i,g in enumerate(lib['grid']):
             grid.extend(g)
             slideIDX.extend([i]*len(g))
+            print('Slide {} has {} tiles'.format(i+1,len(g)))
 
         print('Number of tiles: {}'.format(len(grid)))
         self.slidenames = lib['slides']
@@ -189,7 +189,8 @@ class MILdataset(data.Dataset):
         self.t_data = random.sample(self.t_data, len(self.t_data))
     def __getitem__(self,index):
         if self.mode == 1:
-            patch_path = self.grid[index]
+            slideIDX = slideIDX[index]
+            patch_path = self.slidenames[slideIDX] +"/"+ self.grid[index]
             img =Image.open(patch_path).convert('RGB')
             if self.mult != 1:
                 img = img.resize((224,224),Image.BILINEAR)
