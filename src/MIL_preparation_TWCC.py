@@ -12,7 +12,7 @@ patches_size = 512
 target_gene = "NPM1"
 # left_proportion = 0.6
 # shrink_proportion = 0.15
-patch_num = 500
+patch_num = 2000
 level = 0
 slide_path = "/home/exon_storage1/aml_slide/"
 info_file_path = "/home/weber50432/AML_image_processing/code_use_csv/changeSlideName.csv"
@@ -57,7 +57,7 @@ print(f"測試集樣本樣量：{len(X_test)}")
 print(f"positive target：{y_test.count(1)}")
 
 # %%
-target_gene_rename = target_gene.split(" ")[0]+"_patch"
+target_gene_rename = target_gene.split(" ")[0]+"_patch_20000"
 output_path ="/home/weber50432/AML_image_processing/lib/{}".format(target_gene_rename)
 # check the output path is exist or not
 if not os.path.exists(output_path):

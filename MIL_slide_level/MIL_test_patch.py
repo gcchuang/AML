@@ -106,7 +106,8 @@ class MILdataset(data.Dataset):
         self.t_data = random.sample(self.t_data, len(self.t_data))
     def __getitem__(self,index):
         if self.mode == 1:
-            patch_path = self.grid[index]
+            slideIDX = self.slideIDX[index]
+            patch_path = self.slidenames[slideIDX] +"/"+ self.grid[index]
             img =Image.open(patch_path).convert('RGB')
             if self.mult != 1:
                 img = img.resize((224,224),Image.BILINEAR)
@@ -115,7 +116,7 @@ class MILdataset(data.Dataset):
             return img
         elif self.mode == 2:
             slideIDX, patch_path, target = self.t_data[index]
-            img = Image.open(patch_path).convert('RGB')
+            img = Image.open(self.slidenames[slideIDX] +"/"+patch_path).convert('RGB')
             if self.mult != 1:
                 img = img.resize((224,224),Image.BILINEAR)
             if self.transform is not None:
