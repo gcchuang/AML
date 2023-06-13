@@ -13,3 +13,5 @@ lib
 imgs
 output
 *.log
+data/
+
