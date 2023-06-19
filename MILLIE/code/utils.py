@@ -45,6 +45,18 @@ def load_folder_random(dataset_path, max_no_img=200, crop_size=64):
                     
                     list_of_images.append(randomly_rotate(im))
                     im_num=im_num+1
+        # check if file is an directory
+        elif os.path.isdir(os.path.join(dataset_path, filename[0])):
+            for cell in os.listdir(os.path.join(dataset_path, filename[0])):
+                if cell.endswith(".tiff") or cell.endswith(".png"):    
+                    #random rotation
+                    if im_num<max_no_img:
+                        im = load_image_fov(os.path.join(f"{dataset_path}/{filename[0]}", cell), crop_size)
+                        if im is not None and len(im.shape)==3:
+                            
+                            list_of_images.append(randomly_rotate(im))
+                            im_num=im_num+1
+
     return  list_of_images       
 
 

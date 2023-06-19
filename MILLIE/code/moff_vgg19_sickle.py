@@ -165,7 +165,7 @@ with tf.Session() as sess:
     #w=[1.0, 2.0]
     #weighted_logits = tf.multiply(vgg.new_fc8, w)    
     focal_loss = tf.reduce_mean(
-     tf.nn.softmax_cross_entropy_with_logits_v2(logits=vgg.new_fc8, labels=true_out)) 
+    tf.nn.softmax_cross_entropy_with_logits_v2(logits=vgg.new_fc8, labels=true_out)) 
     
     #focal_loss  = utils.focal_loss_softmax(true_out,vgg.new_fc8, gamma=1.5)
     train = tf.train.GradientDescentOptimizer(0.0003).minimize(focal_loss)

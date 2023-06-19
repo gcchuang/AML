@@ -1,4 +1,5 @@
-import tensorflow as tf
+import tensorflow.compat.v1 as tf
+tf.disable_v2_behavior()
 
 import numpy as np
 from functools import reduce
@@ -14,7 +15,7 @@ class Vgg19:
 
     def __init__(self, vgg19_npy_path=None, trainable=True, dropout=0.5, imsize=512):
         if vgg19_npy_path is not None:
-            self.data_dict = np.load(vgg19_npy_path, encoding='latin1').item()
+            self.data_dict = np.load(vgg19_npy_path, encoding='latin1', allow_pickle=True).item()
         else:
             self.data_dict = None
         self.imsize=imsize    
