@@ -18,6 +18,7 @@ parser.add_argument('--train_lib', type=str, default='', help='path to train MIL
 parser.add_argument('--val_lib', type=str, default='', help='path to validation MIL library binary. If present.')
 parser.add_argument('--patches_path', type=str, default='', help='path to patches')
 parser.add_argument('--output', type=str, default='.', help='name of output file')
+parser.add_argument('--CNN', type=str, default='resnet', help='CNN model')
 parser.add_argument('--batch_size', type=int, default=512, help='mini-batch size (default: 512)')
 parser.add_argument('--nepochs', type=int, default=100, help='number of epochs')
 parser.add_argument('--workers', default=4, type=int, help='number of data loading workers (default: 4)')
@@ -29,26 +30,26 @@ best_acc = 0
 def main():
     global args, best_acc
     args = parser.parse_args()
-    # efficientnet_v2
-    model = models.efficientnet_v2_s(pretrained=True)
-    num_features = model.classifier[1].in_features
-    model._fc = torch.nn.Linear(num_features, 2)
-    # #densenet
-    # model = models.densenet121(pretrained=True)
-    # num_features = model.classifier.in_features
-    # model.classifier = torch.nn.Linear(num_features, 2)
-    # #resnet
-    # model = models.resnet50(True)
-    # model.fc = nn.Linear(model.fc.in_features, 2)
-    # #VGG19
-    # model = models.vgg19_bn(True)
-    # model.classifier[6] = nn.Linear(model.classifier[6].in_features, 2)
-    # #resnext
-    # model = models.resnext50_32x4d(True)
-    # model.fc = nn.Linear(model.fc.in_features, 2)
-    #alexnet
-    # model = models.alexnet(True)
-    # model.classifier[6] = nn.Linear(model.classifier[6].in_features, 2)
+    if (args.CNN == "densenet"):
+        model = models.densenet121(pretrained=True)
+        num_features = model.classifier.in_features
+        model.classifier = torch.nn.Linear(num_features, 2)
+    elif(args.CNN == "efficientnet"):
+        model = models.efficientnet_v2_s(pretrained=True)
+        num_features = model.classifier[1].in_features
+        model._fc = torch.nn.Linear(num_features, 2)
+    elif(args.CNN == "VGG"):
+        model = models.vgg19_bn(True)
+        model.classifier[6] = nn.Linear(model.classifier[6].in_features, 2)
+    elif(args.CNN == "resnext"):
+        model = models.resnext50_32x4d(True)
+        model.fc = nn.Linear(model.fc.in_features, 2)
+    elif(args.CNN == "alexnet"):
+        model = models.alexnet(True)
+        model.classifier[6] = nn.Linear(model.classifier[6].in_features, 2)
+    else:
+        model = models.resnet34(True)
+        model.fc = nn.Linear(model.fc.in_features, 2)
     model.cuda()
 
     if args.weights==0.5:
