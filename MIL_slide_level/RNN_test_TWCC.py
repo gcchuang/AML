@@ -57,7 +57,7 @@ def main():
     #
     probs = test_single(embedder, rnn, loader)
 
-    fp = open(os.path.join(args.output, 'predictions.csv'), 'w')
+    fp = open(os.path.join(args.output, 'RNN_predictions.csv'), 'w')
     fp.write('file,target,prediction,probability\n')
     for name, target, prob in zip(dset.slidenames, dset.targets, probs):
         fp.write('{},{},{},{}\n'.format(name, target, int(prob>=0.5), prob))

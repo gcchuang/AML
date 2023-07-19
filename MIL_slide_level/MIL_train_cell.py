@@ -22,7 +22,7 @@ parser.add_argument('--CNN', type=str, default='resnet', help='CNN model')
 parser.add_argument('--batch_size', type=int, default=512, help='mini-batch size (default: 512)')
 parser.add_argument('--nepochs', type=int, default=100, help='number of epochs')
 parser.add_argument('--workers', default=4, type=int, help='number of data loading workers (default: 4)')
-parser.add_argument('--test_every', default=10, type=int, help='test on val every (default: 10)')
+parser.add_argument('--test_every', default=1, type=int, help='test on val every (default: 1)')
 parser.add_argument('--weights', default=0.5, type=float, help='unbalanced positive class weight (default: 0.5, balanced classes)')
 parser.add_argument('--k', default=1, type=int, help='top k tiles are assumed to be of the same class as the slide (default: 1, standard MIL)')
 
